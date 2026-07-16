@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="img2threejs logo">
+  <defs>
+    <linearGradient id="top" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5cff"/>
+      <stop offset="1" stop-color="#38e8ff"/>
+    </linearGradient>
+    <linearGradient id="left" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2bd4c8"/>
+      <stop offset="1" stop-color="#118a9c"/>
+    </linearGradient>
+    <linearGradient id="right" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6a3cf0"/>
+      <stop offset="1" stop-color="#2a1a7a"/>
+    </linearGradient>
+    <linearGradient id="pix" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd76a"/>
+      <stop offset="1" stop-color="#ff8bd0"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- source pixels dissolving into the cube (image -> 3D) -->
+  <g opacity="0.95">
+    <rect x="6" y="40" width="6" height="6" rx="1.4" fill="url(#pix)" opacity="0.35"/>
+    <rect x="6" y="48" width="6" height="6" rx="1.4" fill="url(#pix)" opacity="0.6"/>
+    <rect x="14" y="48" width="6" height="6" rx="1.4" fill="url(#pix)" opacity="0.85"/>
+  </g>
+
+  <!-- isometric cube -->
+  <g filter="url(#glow)">
+    <polygon points="32,9 53,21 32,33 11,21" fill="url(#top)"/>
+    <polygon points="11,21 32,33 32,56 11,44" fill="url(#left)"/>
+    <polygon points="53,21 32,33 32,56 53,44" fill="url(#right)"/>
+    <polyline points="32,9 32,33" fill="none" stroke="#0d1017" stroke-opacity="0.18" stroke-width="1"/>
+  </g>
+
+  <!-- specular glint on the top face -->
+  <path d="M30 15 l1.6 3.2 3.2 1.6 -3.2 1.6 -1.6 3.2 -1.6 -3.2 -3.2 -1.6 3.2 -1.6 z" fill="#f4faff" opacity="0.9"/>
+</svg>

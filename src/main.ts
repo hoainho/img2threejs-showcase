@@ -17,7 +17,7 @@ function render(): void {
   if (route.name === 'demo') {
     cleanupCurrentRoute = renderDemo(app, route.id);
   } else {
-    renderHome(app);
+    cleanupCurrentRoute = renderHome(app);
   }
 }
 

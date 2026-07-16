@@ -83,8 +83,21 @@ export class Viewer {
   }
 
   start(): void {
+    const clock = new THREE.Clock();
+    // Collect per-frame updaters exposed by demos via `object.userData.tick`.
+    const tickers: Array<(dt: number, elapsed: number) => void> = [];
+    this.scene.traverse((object) => {
+      const tick = (object.userData as { tick?: unknown }).tick;
+      if (typeof tick === 'function') {
+        tickers.push(tick as (dt: number, elapsed: number) => void);
+      }
+    });
+
     const loop = (): void => {
       this.rafHandle = requestAnimationFrame(loop);
+      const dt = clock.getDelta();
+      const elapsed = clock.getElapsedTime();
+      for (const tick of tickers) tick(dt, elapsed);
       this.controls.update();
       this.renderer.render(this.scene, this.camera);
     };
