@@ -130,12 +130,12 @@
       .payee { margin: 1.4rem 0 0; font-size: .95rem; font-weight: 600; }
       .hint { margin: .35rem 0 0; color: var(--muted); font-size: .85rem; line-height: 1.5; }
 
-      .steps { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin: 1.5rem 0 0; font-size: .78rem; color: var(--muted); }
-      .steps span { transition: color .25s, transform .25s; }
+      .steps { display: flex; gap: .4rem .75rem; justify-content: center; align-items: center; flex-wrap: wrap; margin: 1.5rem 0 0; font-size: .78rem; color: var(--muted); }
+      .steps span { display: inline-flex; align-items: center; gap: .4rem; white-space: nowrap; transition: color .25s, transform .25s; }
       .steps span:hover { color: var(--text); transform: translateY(-2px); }
       .steps b {
-        display: inline-grid; place-items: center; width: 1.2rem; height: 1.2rem; margin-right: .25rem;
-        border-radius: 50%; font-size: .7rem; color: #fff;
+        flex: none; display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem;
+        border-radius: 50%; font-size: .7rem; font-weight: 700; line-height: 1; color: #fff;
         background: linear-gradient(135deg, var(--accent), var(--accent-2));
       }
 
