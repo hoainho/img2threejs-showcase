@@ -3,6 +3,7 @@ import { HeroStage } from '../hero-stage';
 
 const GITHUB_URL = 'https://github.com/hoainho/img2threejs';
 const BASE = import.meta.env.BASE_URL;
+const DONATE_URL = `${BASE}donate.html`;
 
 /** Renders the home page and returns a cleanup function that tears down the hero stage. */
 export function renderHome(mount: HTMLElement): () => void {
@@ -37,9 +38,14 @@ export function renderHome(mount: HTMLElement): () => void {
           <img class="brand-mark" src="${BASE}favicon.svg" alt="" width="30" height="30" />
           <span class="brand-name">img2threejs</span>
         </a>
-        <a class="nav-star" href="${GITHUB_URL}" target="_blank" rel="noopener noreferrer">
-          &#9733; Star on GitHub
-        </a>
+        <div class="nav-actions">
+          <a class="nav-donate" href="${DONATE_URL}" target="_blank" rel="noopener noreferrer">
+            &#9829; Sponsor
+          </a>
+          <a class="nav-star" href="${GITHUB_URL}" target="_blank" rel="noopener noreferrer">
+            &#9733; Star on GitHub
+          </a>
+        </div>
       </header>
 
       <section class="hero">
@@ -94,6 +100,8 @@ export function renderHome(mount: HTMLElement): () => void {
       <footer class="footer">
         source &middot;
         <a href="${GITHUB_URL}" target="_blank" rel="noopener noreferrer">github.com/hoainho/img2threejs</a>
+        &nbsp;&middot;&nbsp;
+        <a href="${DONATE_URL}" target="_blank" rel="noopener noreferrer">&#9829; Sponsor this project</a>
       </footer>
     </div>
   `;

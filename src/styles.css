@@ -134,6 +134,30 @@ code,
   transform: translateY(-1px);
 }
 
+.nav-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.nav-donate {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  background: linear-gradient(135deg, #a626aa, #6d28d9);
+  box-shadow: 0 6px 18px -6px rgba(140, 40, 170, 0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-donate:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px -6px rgba(140, 40, 170, 0.75);
+}
+
 /* ---------- Hero ---------- */
 
 .hero {
