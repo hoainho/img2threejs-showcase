@@ -1,74 +1,127 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ủng hộ img2threejs</title>
-    <meta name="description" content="Ủng hộ dự án img2threejs qua MoMo, chuyển khoản ngân hàng (VietQR) hoặc quốc tế." />
+    <title>Support img2threejs</title>
+    <meta name="description" content="Support the img2threejs project via MoMo, VietQR or any Vietnamese bank app." />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <style>
       :root {
         color-scheme: light dark;
-        --bg: #0d1117;
-        --card: #161b22;
-        --border: #30363d;
-        --text: #e6edf3;
-        --muted: #8b949e;
+        --bg-1: #f4f0ff;
+        --bg-2: #eafaf6;
+        --card: rgba(255, 255, 255, 0.72);
+        --card-brd: rgba(255, 255, 255, 0.9);
+        --text: #1c1330;
+        --muted: #6b6480;
         --accent: #a626aa;
+        --accent-2: #6d28d9;
+        --qr-shadow: rgba(120, 40, 160, 0.18);
       }
-      @media (prefers-color-scheme: light) {
-        :root { --bg:#f6f8fa; --card:#fff; --border:#d0d7de; --text:#1f2328; --muted:#59636e; }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-1: #14101f;
+          --bg-2: #0c141a;
+          --card: rgba(28, 24, 40, 0.6);
+          --card-brd: rgba(255, 255, 255, 0.08);
+          --text: #ece7f5;
+          --muted: #a49db8;
+          --accent: #d264d6;
+          --accent-2: #a78bfa;
+          --qr-shadow: rgba(0, 0, 0, 0.5);
+        }
       }
       * { box-sizing: border-box; }
+      html, body { height: 100%; }
       body {
-        margin: 0; padding: 2rem 1rem;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background: var(--bg); color: var(--text);
-        display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(1200px 600px at 15% -10%, var(--bg-1), transparent 60%),
+          radial-gradient(1000px 700px at 100% 110%, var(--bg-2), transparent 55%),
+          var(--bg-2);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 3rem 1.25rem; min-height: 100%;
       }
-      h1 { font-size: 1.6rem; margin: 0 0 .25rem; }
-      .sub { color: var(--muted); margin: 0 0 2rem; text-align: center; max-width: 34rem; }
-      .grid {
-        display: grid; gap: 1.25rem; width: 100%; max-width: 42rem;
-        grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      .wrap { width: 100%; max-width: 30rem; text-align: center; }
+      .badge {
+        display: inline-flex; align-items: center; gap: .45rem;
+        font-size: .78rem; font-weight: 600; letter-spacing: .02em;
+        padding: .35rem .8rem; border-radius: 999px;
+        color: var(--accent-2);
+        background: color-mix(in srgb, var(--accent-2) 12%, transparent);
+        border: 1px solid color-mix(in srgb, var(--accent-2) 24%, transparent);
+        margin-bottom: 1.25rem;
       }
+      h1 {
+        font-size: clamp(1.7rem, 5vw, 2.3rem); line-height: 1.1; margin: 0 0 .6rem;
+        font-weight: 800; letter-spacing: -0.02em;
+        background: linear-gradient(120deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      }
+      .lead { color: var(--muted); font-size: 1rem; line-height: 1.55; margin: 0 auto 2rem; max-width: 26rem; }
       .card {
-        background: var(--card); border: 1px solid var(--border);
-        border-radius: 14px; padding: 1.5rem; text-align: center;
+        position: relative;
+        background: var(--card);
+        border: 1px solid var(--card-brd);
+        border-radius: 24px;
+        padding: 1.75rem 1.75rem 1.5rem;
+        backdrop-filter: blur(18px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        box-shadow: 0 24px 60px -20px var(--qr-shadow), 0 2px 8px rgba(0,0,0,0.04);
       }
-      .card h2 { font-size: 1.05rem; margin: 0 0 1rem; }
-      .card img {
-        width: 100%; max-width: 220px; aspect-ratio: 1;
-        object-fit: contain; border-radius: 10px; background: #fff; padding: 8px;
+      .rails {
+        display: flex; align-items: center; justify-content: center; gap: .55rem;
+        font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+        color: var(--muted); margin-bottom: 1.25rem;
       }
-      .card p { color: var(--muted); font-size: .9rem; margin: 1rem 0 0; word-break: break-word; }
-      a.btn {
-        display: inline-block; margin-top: .75rem; padding: .5rem 1rem;
-        background: var(--accent); color: #fff; text-decoration: none;
-        border-radius: 8px; font-weight: 600; font-size: .9rem;
+      .rails span { color: var(--accent); }
+      .rails i { width: 1px; height: 12px; background: currentColor; opacity: .3; font-style: normal; }
+      .qr {
+        width: min(72%, 260px); aspect-ratio: 1; margin: 0 auto;
+        border-radius: 18px; overflow: hidden;
+        background: #fff; padding: 10px;
+        box-shadow: 0 10px 30px -10px var(--qr-shadow);
       }
-      footer { margin-top: 2.5rem; color: var(--muted); font-size: .85rem; }
-      footer a { color: var(--accent); }
+      .qr img { width: 100%; height: 100%; object-fit: contain; display: block; }
+      .payee { margin: 1.4rem 0 0; font-size: .95rem; font-weight: 600; }
+      .hint { margin: .35rem 0 0; color: var(--muted); font-size: .85rem; line-height: 1.5; }
+      .steps {
+        display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap;
+        margin: 1.5rem 0 0; font-size: .78rem; color: var(--muted);
+      }
+      .steps b { color: var(--accent-2); }
+      footer { margin-top: 2rem; font-size: .85rem; color: var(--muted); }
+      footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
+      footer a:hover { text-decoration: underline; }
+      .heart { display: inline-block; animation: beat 1.6s ease-in-out infinite; }
+      @keyframes beat { 0%,100%{transform:scale(1)} 15%{transform:scale(1.2)} 30%{transform:scale(1)} }
     </style>
   </head>
   <body>
-    <h1>💜 Ủng hộ img2threejs</h1>
-    <p class="sub">
-      Cảm ơn bạn đã dùng img2threejs! Mọi đóng góp giúp dự án tiếp tục phát triển.
-      Chọn phương thức phù hợp bên dưới.
-    </p>
+    <main class="wrap">
+      <span class="badge">✨ Open-source project</span>
+      <h1>Support img2threejs</h1>
+      <p class="lead">
+        Thanks for using img2threejs! If it saved you time, a small tip helps keep the
+        project growing. Scan the code below to donate.
+      </p>
 
-    <div class="grid">
-      <!-- MoMo / VietQR / napas247 -->
-      <div class="card">
-        <h2>MoMo · VietQR · napas247</h2>
-        <img src="momo-qr.png" alt="Mã QR MoMo / VietQR" onerror="this.style.opacity=.3" />
-        <p>Quét bằng app <strong>MoMo</strong> hoặc <strong>bất kỳ app ngân hàng</strong> nào — Nguyễn Hoài Nhớ.</p>
-      </div>
-    </div>
+      <section class="card">
+        <div class="rails"><span>MoMo</span><i></i><span>VietQR</span><i></i><span>napas&nbsp;247</span></div>
+        <div class="qr">
+          <img src="momo-qr.png" alt="MoMo / VietQR donation QR code" onerror="this.parentElement.style.opacity=.35" />
+        </div>
+        <p class="payee">Nguyễn Hoài Nhớ</p>
+        <p class="hint">Scan with the <strong>MoMo app</strong> or <strong>any Vietnamese bank app</strong>.</p>
+        <div class="steps"><span><b>1</b> Open app</span><span><b>2</b> Scan QR</span><span><b>3</b> Send any amount 💜</span></div>
+      </section>
 
-    <footer>
-      ← Quay lại <a href="./">img2threejs demo gallery</a>
-    </footer>
+      <footer>
+        <span class="heart">💜</span> &nbsp;·&nbsp; <a href="./">← Back to the img2threejs demo gallery</a>
+      </footer>
+    </main>
   </body>
 </html>
