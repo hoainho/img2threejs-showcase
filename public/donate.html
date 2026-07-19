@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ủng hộ img2threejs</title>
+    <meta name="description" content="Ủng hộ dự án img2threejs qua MoMo, chuyển khoản ngân hàng (VietQR) hoặc quốc tế." />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0d1117;
+        --card: #161b22;
+        --border: #30363d;
+        --text: #e6edf3;
+        --muted: #8b949e;
+        --accent: #a626aa;
+      }
+      @media (prefers-color-scheme: light) {
+        :root { --bg:#f6f8fa; --card:#fff; --border:#d0d7de; --text:#1f2328; --muted:#59636e; }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; padding: 2rem 1rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg); color: var(--text);
+        display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+      }
+      h1 { font-size: 1.6rem; margin: 0 0 .25rem; }
+      .sub { color: var(--muted); margin: 0 0 2rem; text-align: center; max-width: 34rem; }
+      .grid {
+        display: grid; gap: 1.25rem; width: 100%; max-width: 42rem;
+        grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      }
+      .card {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 14px; padding: 1.5rem; text-align: center;
+      }
+      .card h2 { font-size: 1.05rem; margin: 0 0 1rem; }
+      .card img {
+        width: 100%; max-width: 220px; aspect-ratio: 1;
+        object-fit: contain; border-radius: 10px; background: #fff; padding: 8px;
+      }
+      .card p { color: var(--muted); font-size: .9rem; margin: 1rem 0 0; word-break: break-word; }
+      a.btn {
+        display: inline-block; margin-top: .75rem; padding: .5rem 1rem;
+        background: var(--accent); color: #fff; text-decoration: none;
+        border-radius: 8px; font-weight: 600; font-size: .9rem;
+      }
+      footer { margin-top: 2.5rem; color: var(--muted); font-size: .85rem; }
+      footer a { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <h1>💜 Ủng hộ img2threejs</h1>
+    <p class="sub">
+      Cảm ơn bạn đã dùng img2threejs! Mọi đóng góp giúp dự án tiếp tục phát triển.
+      Chọn phương thức phù hợp bên dưới.
+    </p>
+
+    <div class="grid">
+      <!-- MoMo / VietQR / napas247 -->
+      <div class="card">
+        <h2>MoMo · VietQR · napas247</h2>
+        <img src="momo-qr.png" alt="Mã QR MoMo / VietQR" onerror="this.style.opacity=.3" />
+        <p>Quét bằng app <strong>MoMo</strong> hoặc <strong>bất kỳ app ngân hàng</strong> nào — Nguyễn Hoài Nhớ.</p>
+      </div>
+    </div>
+
+    <footer>
+      ← Quay lại <a href="./">img2threejs demo gallery</a>
+    </footer>
+  </body>
+</html>
