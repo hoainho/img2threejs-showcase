@@ -1,0 +1,115 @@
+name: Submit a showcase demo
+description: Register a new img2threejs demo before opening a PR.
+title: "[Showcase] "
+labels: ["showcase-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for building something for the gallery! Before filling this in:
+
+        1. Generate your model with the [img2threejs](https://github.com/hoainho/img2threejs) skill.
+        2. Follow **[CONTRIBUTING.md](https://github.com/hoainho/img2threejs-showcase/blob/main/CONTRIBUTING.md)** to add your files and push a branch on your fork.
+        3. Come back and fill this form — it helps a maintainer review scope before you open the PR.
+
+        **Ready to open your Pull Request?** → https://github.com/hoainho/img2threejs-showcase/compare
+        (pick `main` as base and your fork/branch as compare)
+
+  - type: input
+    id: demo-id
+    attributes:
+      label: Demo id
+      description: Kebab-case, unique, matches the folder you add under src/demos/<id>/
+      placeholder: e.g. gerber-knife
+    validations:
+      required: true
+
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      placeholder: e.g. Gerber Knife
+    validations:
+      required: true
+
+  - type: dropdown
+    id: subject-class
+    attributes:
+      label: Subject class
+      options:
+        - object
+        - character
+    validations:
+      required: true
+
+  - type: textarea
+    id: blurb
+    attributes:
+      label: Blurb
+      description: 1-2 sentences, same tone as existing entries in src/demos/registry.ts
+    validations:
+      required: true
+
+  - type: input
+    id: reference-image
+    attributes:
+      label: Reference image
+      description: URL to the source photo, or "attached in a comment below"
+    validations:
+      required: true
+
+  - type: input
+    id: source-url
+    attributes:
+      label: Source URL
+      description: Link to your fork/branch (or the PR itself, once opened)
+    validations:
+      required: true
+
+  - type: input
+    id: generated-with
+    attributes:
+      label: Generated with
+      description: img2threejs version used (see SKILL.md front-matter)
+      placeholder: e.g. img2threejs v1.2.0
+    validations:
+      required: true
+
+  - type: input
+    id: author
+    attributes:
+      label: Author (display name)
+      description: Shown as "by <author>" on the gallery card and demo page
+    validations:
+      required: true
+
+  - type: input
+    id: author-url
+    attributes:
+      label: Author URL
+      description: Link for the byline — your GitHub profile is the usual choice
+      placeholder: e.g. https://github.com/your-username
+    validations:
+      required: true
+
+  - type: textarea
+    id: camera-params
+    attributes:
+      label: Camera params (optional)
+      description: cameraPosition / cameraTarget / cameraFov if you already tuned them
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: safety-checklist
+    attributes:
+      label: Self-check before submitting
+      options:
+        - label: I have the rights to use this reference image (own photo, public domain, or explicitly licensed) and can name the source in the PR.
+          required: true
+        - label: The factory builds geometry procedurally in code — no imported .gltf/.obj/.fbx and no downloaded texture packs.
+          required: true
+        - label: The demo makes zero runtime network calls and references no external CDN or fonts.
+          required: true
+        - label: "`npm run build` passes locally with my changes."
+          required: true

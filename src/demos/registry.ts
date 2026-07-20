@@ -37,6 +37,10 @@ export interface DemoEntry {
   sourcePath: string;
   sourceUrl: string;
   generatedWith: string;
+  /** display name of whoever contributed this demo */
+  author: string;
+  /** link to the author's profile (GitHub, etc.) */
+  authorUrl: string;
   status: 'placeholder' | 'final';
   cameraPosition: [number, number, number];
   cameraTarget: [number, number, number];
@@ -65,6 +69,8 @@ export const demos: DemoEntry[] = [
     sourcePath: 'src/demos/sony-wf1000xm3/createSonyWf1000xm3Model.ts',
     sourceUrl: `${REPO}/src/demos/sony-wf1000xm3/createSonyWf1000xm3Model.ts`,
     generatedWith: 'img2threejs v1.2',
+    author: 'Hoài Nhớ',
+    authorUrl: 'https://github.com/hoainho',
     status: 'final',
     cameraPosition: [3.6, 2.7, 5.4],
     cameraTarget: [0, 0.55, 0],
@@ -95,6 +101,8 @@ export const demos: DemoEntry[] = [
     sourcePath: 'src/demos/issaca-shotgun/createIssacaShotgunModel.ts',
     sourceUrl: `${REPO}/src/demos/issaca-shotgun/createIssacaShotgunModel.ts`,
     generatedWith: 'img2threejs v1.2',
+    author: 'Hoài Nhớ',
+    authorUrl: 'https://github.com/hoainho',
     status: 'final',
     cameraPosition: [1.9, 1.35, 3.5],
     cameraTarget: [-0.1, 0.5, 0],
@@ -124,6 +132,8 @@ export const demos: DemoEntry[] = [
     sourcePath: 'src/demos/gerber-knife/createGerberKnifeModel.ts',
     sourceUrl: `${REPO}/src/demos/gerber-knife/createGerberKnifeModel.ts`,
     generatedWith: 'img2threejs v1.2',
+    author: 'Hoài Nhớ',
+    authorUrl: 'https://github.com/hoainho',
     status: 'final',
     cameraPosition: [0.35, 2.15, 6.7],
     cameraTarget: [-0.15, 0, 0],
@@ -154,6 +164,8 @@ export const demos: DemoEntry[] = [
     sourcePath: 'src/demos/doraemon-house/createDoraemonHouseModel.ts',
     sourceUrl: `${REPO}/src/demos/doraemon-house/createDoraemonHouseModel.ts`,
     generatedWith: 'img2threejs v1.2',
+    author: 'Hoài Nhớ',
+    authorUrl: 'https://github.com/hoainho',
     status: 'final',
     cameraPosition: [19, 15.5, 19],
     cameraTarget: [-0.2, 1.3, 0],
@@ -181,6 +193,8 @@ export const demos: DemoEntry[] = [
     sourcePath: 'src/demos/warhauler/createWarHaulerModel.ts',
     sourceUrl: `${REPO}/src/demos/warhauler/createWarHaulerModel.ts`,
     generatedWith: 'img2threejs v1.2',
+    author: 'Hoài Nhớ',
+    authorUrl: 'https://github.com/hoainho',
     status: 'final',
     cameraPosition: [-4.7, 2.7, -5.2],
     cameraTarget: [0, 0.95, -0.2],
@@ -207,6 +221,8 @@ export const demos: DemoEntry[] = [
     sourcePath: 'src/demos/crown-chest/createCrownChestModel.ts',
     sourceUrl: `${REPO}/src/demos/crown-chest/createCrownChestModel.ts`,
     generatedWith: 'img2threejs v1.2',
+    author: 'Hoài Nhớ',
+    authorUrl: 'https://github.com/hoainho',
     status: 'placeholder',
     cameraPosition: [-0.95, 0.5, 2.55],
     cameraTarget: [0, -0.05, 0],
