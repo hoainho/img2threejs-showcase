@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "new-demo": "node scripts/new-showcase.mjs"
   },
   "dependencies": {
     "three": "^0.169.0"
