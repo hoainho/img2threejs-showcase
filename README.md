@@ -93,33 +93,27 @@ row here with a screenshot too.
 
 ## Add your own showcase
 
-1. **Generate a model** with the [img2threejs](https://github.com/hoainho/img2threejs)
-   skill. Reconstruction must be code-only — no imported mesh, no downloaded
-   texture pack.
-2. **Fork this repo**, branch off `main`, and add three files:
-   - `src/demos/<id>/createXModel.ts` — your factory, exactly as generated
-   - a new entry in the `demos` array in [`src/demos/registry.ts`](src/demos/registry.ts) —
-     every `DemoEntry` field is required; set `status: 'final'`, and fill in
-     `author` / `authorUrl` so you're credited on the card and demo page
-   - `public/references/<id>.png` (or `.jpg`/`.jpeg`/`.webp`, ≤ 800 KB)
-3. **Verify locally** before you push:
-   ```bash
-   npm install && npm run build && npm run preview   # check #/demo/<id>
-   node scripts/check-showcase-safety.mjs --base main # same check CI runs
-   ```
-4. **Take a screenshot** of your demo rendering (same framing as the ones
-   above) — you'll attach it to the PR and can add it as a row in the table above.
-5. **Open a pull request against `main`** — follow the
-   [compare link](https://github.com/hoainho/img2threejs-showcase/compare)
-   or run `gh pr create --fill` (the PR description auto-fills from
-   [`PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md)).
-6. `pr-safety-check` runs automatically and must pass before a maintainer
-   reviews. On merge, `deploy.yml` republishes the live gallery — no manual
-   deploy step.
+```bash
+git clone https://github.com/<you>/img2threejs-showcase.git && cd img2threejs-showcase
+npm install
+git checkout -b add-demo/<id>
+npm run new-demo -- <id> "<Title>" object   # scaffolds src/demos/<id>/ + a registry.ts entry
+# → paste your img2threejs factory in, fill the TODOs, add public/references/<id>.png
+npm run build && npm run preview            # check #/demo/<id>
+node scripts/check-showcase-safety.mjs --base main
+git add -A && git commit -m "Add <id> showcase demo" && git push -u origin add-demo/<id>
+gh pr create --fill
+```
 
-Full step-by-step, the approval checklist, and what gets a submission
-rejected live in **[CONTRIBUTING.md](CONTRIBUTING.md)** — read it before
-opening a PR. You can also open the
+`npm run new-demo` runs [`scripts/new-showcase.mjs`](scripts/new-showcase.mjs) —
+it creates the factory stub and registry entry for you, TODO-marked, so
+`npm run build` already passes before you've written a line of your own.
+`pr-safety-check` CI must pass before a maintainer reviews; on merge,
+`deploy.yml` republishes the live gallery automatically.
+
+**Full walkthrough, what each field means, and what gets a submission
+rejected live in [CONTRIBUTING.md](CONTRIBUTING.md) — read it before opening
+a PR.** You can also open the
 [**Submit a showcase demo**](https://github.com/hoainho/img2threejs-showcase/issues/new/choose)
 issue form first to get early feedback on scope before doing the work.
 
