@@ -22,6 +22,9 @@ export function renderDemo(mount: HTMLElement, id: string): () => void {
       <div class="demo-panel">
         <a class="back-link" href="#/">&larr; Back to gallery</a>
         <h2>${demo.title}</h2>
+        <p class="demo-author">by
+          <a href="${demo.authorUrl}" target="_blank" rel="noopener noreferrer">${demo.author}</a>
+        </p>
         <img class="demo-ref-thumb" src="${demo.referenceImage}" alt="${demo.title} reference" />
         <div class="demo-meta">
           <span class="badge badge-${demo.subjectClass}">${demo.subjectClass}</span>

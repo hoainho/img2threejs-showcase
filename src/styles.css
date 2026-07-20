@@ -568,6 +568,13 @@ code,
   min-height: 2.56em;
 }
 
+.card-author {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-top: 0.2rem;
+}
+
 .card-body .badges {
   margin-top: auto;
 }
@@ -679,6 +686,18 @@ code,
 .demo-panel h2 {
   margin: 0;
   font-size: 1.15rem;
+}
+
+.demo-author {
+  margin: 0.15rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+.demo-author a {
+  color: var(--text-dim);
+  text-decoration: underline;
 }
 
 .demo-ref-thumb {
