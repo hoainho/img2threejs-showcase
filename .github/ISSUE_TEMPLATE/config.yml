@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Contributing guide
+    url: https://github.com/hoainho/img2threejs-showcase/blob/main/CONTRIBUTING.md
+    about: Read this first — step-by-step flow from a generated model to a merged showcase demo.

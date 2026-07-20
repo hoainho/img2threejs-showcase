@@ -20,6 +20,7 @@ export function renderHome(mount: HTMLElement): () => void {
         </div>
         <div class="card-body">
           <div class="card-title">${demo.title}</div>
+          <div class="card-author">by ${demo.author}</div>
           <div class="badges">
             <span class="badge badge-${demo.subjectClass}">${demo.subjectClass}</span>
             <span class="badge">${demo.generatedWith}</span>

@@ -9,6 +9,10 @@ Live gallery: home page lists each demo; `#/demo/:id` opens a full-viewport
 viewer for that demo with OrbitControls, per-demo studio lighting, and a
 reference-image side panel.
 
+**Want to add your own demo?** See [CONTRIBUTING.md](CONTRIBUTING.md) for the
+full flow — generate with the skill, add your files, open a PR. CI
+(`pr-safety-check`) and a maintainer review gate what gets merged.
+
 ## Stack
 
 - three ^0.169.0, TypeScript ^5.6.0, Vite ^5.4.0

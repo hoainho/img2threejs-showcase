@@ -1,0 +1,22 @@
+# CODEOWNERS: last matching pattern wins. Order matters below.
+
+# Default: owner reviews everything not covered by a more specific rule.
+* @hoainho
+
+# Contribution surface for showcase demos — no forced extra reviewer here,
+# normal PR review applies. These lines have no owner on purpose: they
+# override the "*" rule above for these paths.
+/src/demos/
+/public/references/
+/src/demos/registry.ts
+
+# Anything outside that surface needs the owner's review (redundant with the
+# "*" default, listed explicitly so the intent is unambiguous):
+/package.json @hoainho
+/package-lock.json @hoainho
+/vite.config.ts @hoainho
+/tsconfig.json @hoainho
+/.github/ @hoainho
+/src/main.ts @hoainho
+/src/router.ts @hoainho
+/src/scene.ts @hoainho
