@@ -39,7 +39,7 @@ export class Viewer {
     mount.appendChild(this.renderer.domElement);
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(options.background ?? 0xf5f4ee);
+    this.scene.background = new THREE.Color(options.background ?? 0x1b1d24);
 
     const pmrem = new THREE.PMREMGenerator(this.renderer);
     this.scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
