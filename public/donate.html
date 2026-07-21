@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Support img2threejs</title>
-    <meta name="description" content="Support the img2threejs project via MoMo, VietQR or any Vietnamese bank app." />
+    <meta name="description" content="Support the img2threejs project via MoMo, VietQR, any Vietnamese bank app, or PayPal." />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <style>
       @property --angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
@@ -155,6 +155,23 @@
       }
       .steps .sep { color: var(--accent); opacity: .5; }
 
+      .divider {
+        display: flex; align-items: center; gap: .6rem; margin: 1.4rem 0 1.1rem;
+        font-family: var(--mono); font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+        text-transform: uppercase; color: var(--muted);
+      }
+      .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+      .paypal {
+        display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+        width: 100%; padding: .75rem 1.25rem; border-radius: 12px;
+        font-weight: 700; font-size: .95rem; text-decoration: none;
+        color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow: 0 10px 26px -10px var(--qr-shadow);
+        transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease;
+      }
+      .paypal:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px var(--qr-shadow); }
+
       footer { margin-top: 2rem; font-family: var(--mono); font-size: .85rem; color: var(--muted); }
       footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
       footer a:hover { text-decoration: underline; }
@@ -194,6 +211,12 @@
           <span class="sep">/</span>
           <span class="step"><span class="n">03</span>send</span>
         </div>
+
+        <div class="divider"><span>or</span></div>
+
+        <a class="paypal" href="https://www.paypal.com/paypalme/NguyenHoai545" target="_blank" rel="noopener noreferrer">
+          Donate via PayPal
+        </a>
       </section>
 
       <footer class="reveal d4">
