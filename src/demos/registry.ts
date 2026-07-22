@@ -24,6 +24,10 @@ import {
   createSonyWf1000xm3LookDevLights,
   makeSonyBackground,
 } from './sony-wf1000xm3/createSonyWf1000xm3Model';
+import {
+  createBMXEnduranceBikeModel,
+  createBMXEnduranceBikeLookDevLights,
+} from './bmx-endurance/createBmxEnduranceBikeModel';
 
 export interface DemoEntry {
   /** route id, e.g. 'crown-chest' */
@@ -45,6 +49,24 @@ export interface DemoEntry {
   cameraPosition: [number, number, number];
   cameraTarget: [number, number, number];
   cameraFov: number;
+  /** Optional per-demo accent (hex) — themes the panel to the object's signature colour. */
+  accent?: string;
+  /** Optional radial-gradient backdrop (inner→outer hex) for a themed hero stage. */
+  backgroundGradient?: { inner: string; outer: string };
+  /** ACES exposure (default 1.0); <1 = darker/moodier to match a low-key reference. */
+  exposure?: number;
+  /** Scene IBL intensity (default 1.0); <1 = less ambient fill. */
+  environmentIntensity?: number;
+  /** Tone-mapping operator (default 'aces'); 'agx' preserves saturated crimson/red a Ruby-Doppler
+   * blade needs (ACES desaturates pure red toward pink/brown). */
+  toneMapping?: 'aces' | 'agx' | 'neutral';
+  /**
+   * Installs this demo's own light rig. When provided, the Viewer SKIPS its
+   * default studio rig — preventing the double-lighting (own rig + default rig)
+   * that blows out highlights and washes out low-key references. Demos with a
+   * bespoke look-dev rig MUST use this instead of adding lights inside build().
+   */
+  installLights?: (scene: THREE.Scene) => void;
   /** Adds the model (and any demo-specific lights) to the scene, returns the group. */
   build: (scene: THREE.Scene) => THREE.Group;
 }
@@ -53,6 +75,94 @@ const BASE = import.meta.env.BASE_URL;
 const REPO = 'https://github.com/hoainho/img2threejs-showcase/blob/main';
 
 export const demos: DemoEntry[] = [
+  {
+    id: 'bmx-endurance',
+    title: 'BMX Endurance Bike',
+    subjectClass: 'object',
+    blurb:
+      'An orange BMX "Endurance" bike rebuilt in code from a 12-view reference set: glossy ' +
+      'clear-coat orange frame with fish-scale TIG weld beads, 5-spoke solid aero MAG wheels ' +
+      '(gloss black + orange rim lip), block-tread tyres with "TERRAIN MONSTER / SHARP / 2022" ' +
+      'sidewall lettering, ribbed orange grips, elongated PU-leather saddle, platform pedals with ' +
+      'amber reflectors, 8-arm sunburst sprocket + roller chain, rear U-brake with straddle cable, ' +
+      'a single slim front peg + knurled rear pegs, and BMX / Endurance decals. Live synchronized drivetrain: ' +
+      'cranks turn, both wheels roll at the correct gear ratio.',
+    referenceImage: `${BASE}references/bmx-endurance.jpg`,
+    sourcePath: 'src/demos/bmx-endurance/createBmxEnduranceBikeModel.ts',
+    sourceUrl: `${REPO}/src/demos/bmx-endurance/createBmxEnduranceBikeModel.ts`,
+    generatedWith: 'img2threejs v1.3',
+    author: 'Hoài Nhớ',
+    authorUrl: 'https://github.com/hoainho',
+    status: 'final',
+    // low ~45° isometric angle so the front end + fork read aggressive
+    cameraPosition: [2.75, 0.5, 2.75],
+    cameraTarget: [0, -0.12, 0],
+    cameraFov: 33,
+    exposure: 0.95,
+    environmentIntensity: 0.62,
+    // Single rig routed through installLights so the Viewer skips its default studio
+    // rig — otherwise the two stack and wash the orange clear-coat out to pale yellow.
+    installLights: (scene) => {
+      scene.add(createBMXEnduranceBikeLookDevLights());
+    },
+    build: (scene) => {
+      scene.background = new THREE.Color(0x0a0a0a); // dark studio stage (spec §4.A)
+      const group = createBMXEnduranceBikeModel({ castShadow: true, receiveShadow: true });
+      scene.add(group);
+
+      // Contact-shadow floor right under the tyre contact patch (wheels sit at y≈-0.65),
+      // so the bike grips the ground instead of floating (spec §4.C).
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(6, 6),
+        new THREE.ShadowMaterial({ opacity: 0.55 }),
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = -0.655;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      // --- synchronized drivetrain rig (host-side, uses the model's node runtime) ---
+      const nodes =
+        (group.userData.sculptRuntime as { nodes?: Record<string, THREE.Object3D> } | undefined)
+          ?.nodes ?? {};
+      // Reparent parts onto a pivot at (cx,cy,0) so they spin about that axle.
+      const pivotAt = (ids: string[], cx: number, cy: number): THREE.Group => {
+        const pivot = new THREE.Group();
+        pivot.position.set(cx, cy, 0);
+        group.add(pivot);
+        for (const id of ids) {
+          const n = nodes[id];
+          if (!n) continue;
+          n.position.set(n.position.x - cx, n.position.y - cy, n.position.z);
+          pivot.add(n); // children (e.g. spokes under a rim) travel with it
+        }
+        return pivot;
+      };
+      const frontWheel = pivotAt(['frontTire', 'frontRim', 'frontHub'], -0.66, -0.28);
+      const rearWheel = pivotAt(['rearTire', 'rearRim', 'rearHub'], 0.52, -0.28);
+      const crank = pivotAt(['crankArmL', 'crankArmR', 'chainring'], -0.02, -0.24);
+      const pedals = ['pedalL', 'pedalR']
+        .map((id) => nodes[id])
+        .filter((n): n is THREE.Object3D => !!n);
+      for (const p of pedals) {
+        p.position.set(p.position.x - -0.02, p.position.y - -0.24, p.position.z);
+        crank.add(p);
+      }
+
+      // chainring radius / rear-cog radius → rear wheel turns faster than the cranks.
+      const GEAR_RATIO = 2.4;
+      const CRANK_SPEED = -1.5; // rad/s (negative = forward-rolling direction)
+      group.userData.tick = (dt: number) => {
+        const dCrank = CRANK_SPEED * dt;
+        crank.rotation.z -= dCrank;
+        for (const p of pedals) p.rotation.z += dCrank; // keep platforms level
+        const dWheel = dCrank * GEAR_RATIO; // synchronized: ω_wheel = ω_crank × ratio
+        frontWheel.rotation.z -= dWheel;
+        rearWheel.rotation.z -= dWheel;
+      };
+      return group;
+    },
+  },
   {
     id: 'sony-wf1000xm3',
     title: 'Sony WF-1000XM3 Earbuds + Case',
