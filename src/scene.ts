@@ -9,6 +9,38 @@ export interface ViewerOptions {
   cameraTarget?: [number, number, number];
   cameraFov?: number;
   background?: number;
+  /** Radial gradient backdrop (inner→outer hex) — a premium themed stage for hero props. */
+  backgroundGradient?: { inner: string; outer: string };
+  /** Tone-mapping operator (default 'aces'). 'agx' preserves saturated reds/crimson that ACES
+   * desaturates toward pink/brown (critical for a Ruby-Doppler blade); 'neutral' scales linearly. */
+  toneMapping?: 'aces' | 'agx' | 'neutral';
+  /** Tone-mapping exposure (default 1.0). <1 darkens the whole render for a moody look. */
+  exposure?: number;
+  /** Scene environment (IBL) intensity (default 1.0). <1 cuts ambient fill. */
+  environmentIntensity?: number;
+  /**
+   * Headless-evaluation capture mode (default false). When true the viewer renders on a flat
+   * white studio background (to match reference-photo framing), skips the contact-shadow ground,
+   * and freezes the camera (no orbit damping) so a deterministic PNG can be captured for the
+   * Divine Eye reference loop. Does NOT change the object's own appearance — capture-only.
+   */
+  capture?: boolean;
+}
+
+/** Build a radial-gradient backdrop as a CanvasTexture (colorSpace = SRGB for a colour bg). */
+function makeGradientBackground(inner: string, outer: string): THREE.CanvasTexture {
+  const size = 1024;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext('2d')!;
+  const g = ctx.createRadialGradient(size * 0.5, size * 0.42, size * 0.05, size * 0.5, size * 0.5, size * 0.72);
+  g.addColorStop(0, inner);
+  g.addColorStop(1, outer);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, size, size);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
 }
 
 /**
@@ -25,24 +57,42 @@ export class Viewer {
   private readonly mount: HTMLElement;
   private rafHandle = 0;
   private readonly onResize: () => void;
+  private readonly capture: boolean;
 
   constructor(mount: HTMLElement, options: ViewerOptions = {}) {
     this.mount = mount;
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.0;
+    this.renderer.toneMapping = options.toneMapping === 'agx'
+      ? THREE.AgXToneMapping
+      : options.toneMapping === 'neutral'
+        ? THREE.NeutralToneMapping
+        : THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = options.exposure ?? 1.0;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     mount.appendChild(this.renderer.domElement);
 
+    this.capture = options.capture ?? false;
+
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(options.background ?? 0x1b1d24);
+    if (this.capture) {
+      // Flat white studio bg matches the reference photos (white-bg) → fair silhouette IoU.
+      this.scene.background = new THREE.Color(0xffffff);
+    } else if (options.backgroundGradient) {
+      this.scene.background = makeGradientBackground(
+        options.backgroundGradient.inner,
+        options.backgroundGradient.outer,
+      );
+    } else {
+      this.scene.background = new THREE.Color(options.background ?? 0x1b1d24);
+    }
 
     const pmrem = new THREE.PMREMGenerator(this.renderer);
     this.scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    this.scene.environmentIntensity = options.environmentIntensity ?? 1.0;
     pmrem.dispose();
 
     this.camera = new THREE.PerspectiveCamera(options.cameraFov ?? 36, 1, 0.1, 100);
@@ -50,7 +100,9 @@ export class Viewer {
     this.camera.position.set(px, py, pz);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
+    // Freeze the camera in capture mode so evaluation renders are deterministic.
+    this.controls.enableDamping = !this.capture;
+    this.controls.enabled = !this.capture;
     const [tx, ty, tz] = options.cameraTarget ?? [0, 0, 0];
     this.controls.target.set(tx, ty, tz);
     this.controls.update();
@@ -61,13 +113,17 @@ export class Viewer {
       installDefaultStudioLights(this.scene);
     }
 
-    const ground = new THREE.Mesh(
-      new THREE.PlaneGeometry(30, 30),
-      new THREE.ShadowMaterial({ opacity: 0.3 }),
-    );
-    ground.rotation.x = -Math.PI / 2;
-    ground.receiveShadow = true;
-    this.scene.add(ground);
+    // Skip the contact-shadow ground in capture mode: the reference photos have no cast shadow,
+    // and a shadow blob on the white bg would pollute the silhouette IoU.
+    if (!this.capture) {
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(30, 30),
+        new THREE.ShadowMaterial({ opacity: 0.16 }),
+      );
+      ground.rotation.x = -Math.PI / 2;
+      ground.receiveShadow = true;
+      this.scene.add(ground);
+    }
 
     this.onResize = () => this.handleResize();
     window.addEventListener('resize', this.onResize);
@@ -102,6 +158,62 @@ export class Viewer {
       this.renderer.render(this.scene, this.camera);
     };
     loop();
+
+    // Headless-evaluation ready-signal: wait for async texture loads (DefaultLoadingManager),
+    // then a few frames so shaders compile + buffers flip, then flag the page as capture-ready.
+    // Fixes the load-race that produced false "chrome"/white renders. No-op for normal viewing
+    // beyond setting a window flag. See grimoire/feedback/render_capture.md.
+    const w = window as unknown as { __IMG2THREEJS_READY__?: boolean };
+    w.__IMG2THREEJS_READY__ = false;
+    let signalled = false;
+    const signalReady = (): void => {
+      if (signalled) return;
+      signalled = true;
+      let framesToWait = 6;
+      const pump = (): void => {
+        if (framesToWait-- > 0) {
+          requestAnimationFrame(pump);
+          return;
+        }
+        w.__IMG2THREEJS_READY__ = true;
+      };
+      pump();
+    };
+    THREE.DefaultLoadingManager.onLoad = signalReady;
+    // Fallback: if no async loads are pending, onLoad never fires → kick after a short delay.
+    setTimeout(signalReady, 600);
+  }
+
+  /**
+   * Capture-mode auto-framing: place the camera side-on (looking down +Z at the model's
+   * bounding-box centre) at a distance that fits the object, matching a side-on reference plate.
+   * Call AFTER the demo's build() so the model exists. Near-ortho fov reduces perspective skew.
+   */
+  frameForCapture(fovDeg = 20, margin = 1.12): void {
+    const box = new THREE.Box3();
+    this.scene.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (mesh.isMesh && mesh.geometry) box.expandByObject(mesh);
+    });
+    if (box.isEmpty()) return;
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    this.camera.fov = fovDeg;
+    const vFov = (fovDeg * Math.PI) / 180;
+    const halfH = size.y / 2;
+    const halfW = size.x / 2;
+    const aspect = this.camera.aspect || 1;
+    const distH = halfH / Math.tan(vFov / 2);
+    const distW = halfW / Math.tan(vFov / 2) / aspect;
+    const dist = Math.max(distH, distW) * margin + size.z / 2;
+    this.camera.position.set(center.x, center.y, center.z + dist);
+    this.camera.near = Math.max(0.01, dist - size.z);
+    this.camera.far = dist + size.z * 4;
+    this.camera.updateProjectionMatrix();
+    this.camera.lookAt(center);
+    this.controls.target.copy(center);
+    this.controls.update();
+    this.renderer.render(this.scene, this.camera);
   }
 
   /** Frees renderer/GPU resources. Call this before swapping to a new demo. */
