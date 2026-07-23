@@ -175,10 +175,9 @@ export const demos: DemoEntry[] = [
     blurb:
       'A CS2 M9 Bayonet rebuilt in code from a single broadside reference: the exact traced ' +
       'silhouette (scalloped sawteeth, thumb-hole, wedge-ground blade) with a single continuous ' +
-      'flat-bar guard and a knurled worn-gunmetal grip. The blade finish is an original ' +
-      'procedural gradient + domain-warped "smoke" generator inspired by the Doppler Phase 2 ' +
-      "colourway (blue -> violet -> cyan) — not a copy of Valve's authored pattern; this repo " +
-      'never bundles or redistributes Valve assets (see NOTICE upstream). Live: a slow studio rock.',
+      'flat-bar guard and a knurled worn-gunmetal grip. The Doppler Phase 2 finish (blue -> ' +
+      'violet -> cyan smoke) is applied as reference-crop textures projected onto the blade and ' +
+      'handle, over a code-generated studio environment. Live: a slow studio rock.',
     referenceImage: `${BASE}references/m9-doppler.jpg`,
     sourcePath: 'src/demos/m9-doppler/createM9DopplerModel.ts',
     sourceUrl: `${REPO}/src/demos/m9-doppler/createM9DopplerModel.ts`,
@@ -189,12 +188,16 @@ export const demos: DemoEntry[] = [
     cameraPosition: [0.4, 1.5, 5.2],
     cameraTarget: [0, 0, 0],
     cameraFov: 30,
+    exposure: 1.42,
+    // Own rig via installLights so the Viewer skips its default studio rig (the build was lit
+    // by this single 3-point rig + the RoomEnvironment IBL at exposure 1.42).
+    installLights: (scene) => {
+      scene.add(createM9DopplerLookDevLights());
+    },
     build: (scene) => {
       scene.background = makeM9DopplerBackground();
       const group = createM9DopplerModel({ shadows: true });
       scene.add(group);
-      const lights = createM9DopplerLookDevLights();
-      scene.add(lights);
       return group;
     },
   },
