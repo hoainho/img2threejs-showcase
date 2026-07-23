@@ -195,6 +195,7 @@ export const demos: DemoEntry[] = [
       scene.add(createM9DopplerLookDevLights());
     },
     build: (scene) => {
+      // Dark backdrop is owned by this demo's own module (runs after the Viewer, so it wins).
       scene.background = makeM9DopplerBackground();
       const group = createM9DopplerModel({ shadows: true });
       scene.add(group);

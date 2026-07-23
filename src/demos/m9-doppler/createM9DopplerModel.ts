@@ -64,12 +64,25 @@ export function createM9DopplerLookDevLights(): THREE.Group {
   return g;
 }
 
-/** Near-black studio backdrop (matches the build's 0x05060a background). */
+/**
+ * Near-black radial studio backdrop for THIS demo only (set by build() on the scene, which runs
+ * after the Viewer's constructor so it wins). Dark edges + a faint centre lift make the Doppler
+ * blade pop. Self-contained here — no shared registry theming.
+ */
 export function makeM9DopplerBackground(): THREE.CanvasTexture {
+  const size = 512;
   const cv = document.createElement('canvas');
-  cv.width = cv.height = 16;
+  cv.width = cv.height = size;
   const c = cv.getContext('2d')!;
-  c.fillStyle = '#05060a';
-  c.fillRect(0, 0, 16, 16);
-  return new THREE.CanvasTexture(cv);
+  const grad = c.createRadialGradient(
+    size * 0.5, size * 0.46, size * 0.04,
+    size * 0.5, size * 0.5, size * 0.72,
+  );
+  grad.addColorStop(0, '#0e1220'); // faint centre lift behind the blade
+  grad.addColorStop(1, '#020305'); // near-black edges
+  c.fillStyle = grad;
+  c.fillRect(0, 0, size, size);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
 }
