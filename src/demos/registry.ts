@@ -1,4 +1,9 @@
 import * as THREE from 'three';
+import {
+  createM9DopplerModel,
+  createM9DopplerLookDevLights,
+  makeM9DopplerBackground,
+} from './m9-doppler/createM9DopplerModel';
 import { createCrownChestModel } from './crown-chest/createCrownChestModel';
 import {
   createWarHaulerModel,
@@ -160,6 +165,36 @@ export const demos: DemoEntry[] = [
         frontWheel.rotation.z -= dWheel;
         rearWheel.rotation.z -= dWheel;
       };
+      return group;
+    },
+  },
+  {
+    id: 'm9-doppler',
+    title: 'M9 Bayonet | Doppler Phase 2',
+    subjectClass: 'object',
+    blurb:
+      'A CS2 M9 Bayonet rebuilt in code from a single broadside reference: the exact traced ' +
+      'silhouette (scalloped sawteeth, thumb-hole, wedge-ground blade) with a single continuous ' +
+      'flat-bar guard and a knurled worn-gunmetal grip. The blade finish is an original ' +
+      'procedural gradient + domain-warped "smoke" generator inspired by the Doppler Phase 2 ' +
+      "colourway (blue -> violet -> cyan) — not a copy of Valve's authored pattern; this repo " +
+      'never bundles or redistributes Valve assets (see NOTICE upstream). Live: a slow studio rock.',
+    referenceImage: `${BASE}references/m9-doppler.jpg`,
+    sourcePath: 'src/demos/m9-doppler/createM9DopplerModel.ts',
+    sourceUrl: `${REPO}/src/demos/m9-doppler/createM9DopplerModel.ts`,
+    generatedWith: 'img2threejs v1.3',
+    author: 'kokorolx',
+    authorUrl: 'https://github.com/kokorolx',
+    status: 'final',
+    cameraPosition: [0.4, 1.5, 5.2],
+    cameraTarget: [0, 0, 0],
+    cameraFov: 30,
+    build: (scene) => {
+      scene.background = makeM9DopplerBackground();
+      const group = createM9DopplerModel({ shadows: true });
+      scene.add(group);
+      const lights = createM9DopplerLookDevLights();
+      scene.add(lights);
       return group;
     },
   },
