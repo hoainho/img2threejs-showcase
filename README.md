@@ -170,3 +170,13 @@ maintainer, not via the contributor PR flow above):
 
 No other files need to change — the router, viewer, and pages read
 everything from the registry.
+
+## Star History
+
+<a href="https://www.star-history.com/#hoainho/img2threejs-showcase&Timeline">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=hoainho/img2threejs-showcase&type=Timeline&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=hoainho/img2threejs-showcase&type=Timeline" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=hoainho/img2threejs-showcase&type=Timeline" />
+ </picture>
+</a>
